@@ -332,6 +332,23 @@ void dump(const std::vector<std::string>& args) {
     } else {
       fasttext.getOutputMatrix()->dump(std::cout);
     }
+  } else if (option == "vector") {
+    if (fasttext.isQuant()) {
+      std::cerr << "Not supported for quantized models." << std::endl;
+    } else {
+      if(args.size() == 5)
+        fasttext.saveVectors(args[4]);
+      else{
+        std::string path;
+        int pos=0;
+        if(modelPath.find(".bin") != std::string::npos || modelPath.find(".ftz") != std::string::npos){
+          pos=4;
+          
+        }
+        path = modelPath.substr(0, modelPath.size()-pos) + ".vec";
+        fasttext.saveVectors(path);
+      }
+    }
   } else {
     printDumpUsage();
     exit(EXIT_FAILURE);
